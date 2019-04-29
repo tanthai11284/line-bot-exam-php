@@ -19,6 +19,9 @@
       $arrayPostData['messages'][1]['stickerId'] = "34";
       pushMsg($arrayHeader,$arrayPostData);
    }
+   $message = $arrayJson['events'][0]['message']['text'];
+   //รับ id ของผู้ใช้
+   $id = $arrayJson['events'][0]['source']['userId'];
    if($message == "hello"){
       $arrayPostData['to'] = $id;
       $arrayPostData['messages'][0]['type'] = "text";
