@@ -1,5 +1,4 @@
 <?php
-   require_once('connect.php');
    $accessToken = "4B9hde1V+AWUNikjDomLWL8KSBq7RGoqWt3tZGWDdMDVpHkgqjYUV5yqtm+Vl6JxNExfe2mQ7AVzQ0Li4WoptkKMNrIdRFE37qYVqBPyrOm7nYcD9bN/cNMphSbjFGbLN9LKx0jQFAhAdu5IMUnV5AdB04t89/1O/w1cDnyilFU=";//copy ข้อความ Channel access token ตอนที่ตั้งค่า
    $content = file_get_contents('php://input');
    $arrayJson = json_decode($content, true);
