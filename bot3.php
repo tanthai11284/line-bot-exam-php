@@ -3,16 +3,16 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+ 
 // include composer autoload
 require_once '/vendor/autoload.php';
-
+ 
 // การตั้งเกี่ยวกับ bot
 require_once 'bot_settings.php';
-
+ 
 // กรณีมีการเชื่อมต่อกับฐานข้อมูล
 //require_once("dbconnect.php");
-
+ 
 ///////////// ส่วนของการเรียกใช้งาน class ผ่าน namespace
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient;
@@ -47,43 +47,31 @@ use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\ImageCarouselColumnTemplateBuilder;
-
+ 
 // เชื่อมต่อกับ LINE Messaging API
-$httpClient = new CurlHTTPClient('I/gvZtAe7z/7sqC/LrM9oXI22auDniaCelNYtqoVImDQ8HBVK96dnJ5A00Lo9Cjcq8qnf5fwaKwdsB306zRy0XOm2Kq4TR8xWGVlvajlDOY3PtdM5fvmuxg5acurcUAeuDMWAJry4Ae/XX+UnT5qHwdB04t89/1O/w1cDnyilFU=');
-$bot = new LINEBot($httpClient, array('channelSecret' => '1c17f19dd724e8a0366c0879db61d234'));
-
+$httpClient = new CurlHTTPClient('Mifmh+b4UBmdKNbokxgjN3q2FHJKwYykOEWrL5+oiECMm3P+fWpaWL3soVk45UgfnpXZraz6M2IWxA5F6E3NrP6b7zf063Cw3Nn8bMIqQGD0rmWcjqBzq6kEQtwmNC7gEioZWwtiUFgesLF3x08U8wdB04t89/1O/w1cDnyilFU=');
+$bot = new LINEBot($httpClient, array('channelSecret' => 'cb0748ceb91bdb5a1c874b354e3ea6ab'));
+ 
 // คำสั่งรอรับการส่งค่ามาของ LINE Messaging API
 $content = file_get_contents('php://input');
-
+ 
 // แปลงข้อความรูปแบบ JSON  ให้อยู่ในโครงสร้างตัวแปร array
 $events = json_decode($content, true);
 if(!is_null($events)){
     // ถ้ามีค่า สร้างตัวแปรเก็บ replyToken ไว้ใช้งาน
     $replyToken = $events['events'][0]['replyToken'];
-    $typeMessage = $events['events'][0]['message']['type'];
-    $userMessage = $events['events'][0]['message']['text'];
-    switch ($typeMessage){
-        case 'text':
-            switch ($userMessage) {
-                case "A":
-                    $textReplyMessage = "คุณพิมพ์ A";
-                    break;
-                case "B":
-                    $textReplyMessage = "คุณพิมพ์ B";
-                    break;
-                default:
-                    $textReplyMessage = " คุณไม่ได้พิมพ์ A และ B";
-                    break;                                      
-            }
-            break;
-        default:
-            $textReplyMessage = json_encode($events);
-            break;  
-    }
 }
 // ส่วนของคำสั่งจัดเตียมรูปแบบข้อความสำหรับส่ง
-$textMessageBuilder = new TextMessageBuilder($textReplyMessage);
+$textMessageBuilder = new TextMessageBuilder(json_encode($events));
  
 //l ส่วนของคำสั่งตอบกลับข้อความ
 $response = $bot->replyMessage($replyToken,$textMessageBuilder);
-
+if ($response->isSucceeded()) {
+    echo 'Succeeded!';
+    return;
+}
+ 
+// Failed
+echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+?>
+ 
